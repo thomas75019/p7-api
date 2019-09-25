@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Product;
+use App\Entity\User;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,13 +37,24 @@ class AppController extends AbstractFOSRestController
      *
      * @return Response
      *
-     * @Rest\Get("product/{id}")
+     * @Rest\Get("/product/{id}")
      */
     public function getOneProduct(Request $request) : Response
     {
         $product = $this->getDoctrine()->getRepository(Product::class)->find($request->get('id'));
 
         return $this->handleView($this->view($product, 200));
+    }
 
+    /**
+     * Get All Users
+     *
+     * @Rest\Get("/users")
+     */
+    public function getAllUsers()
+    {
+        $users = $this->getDoctrine()->getRepository(User::class)->findAll();
+
+        return $this->handleView($this->view($users, 200));
     }
 }
