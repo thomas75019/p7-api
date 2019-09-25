@@ -84,6 +84,8 @@
       <path value="$PROJECT_DIR$/bilemo_api/vendor/hoa/iterator" />
       <path value="$PROJECT_DIR$/bilemo_api/vendor/hoa/file" />
       <path value="$PROJECT_DIR$/bilemo_api/vendor/hoa/stream" />
+      <path value="$PROJECT_DIR$/bilemo_api/vendor/symfony/web-server-bundle" />
+      <path value="$PROJECT_DIR$/bilemo_api/vendor/symfony/process" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.1" />
