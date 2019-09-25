@@ -18,6 +18,8 @@ class AppController extends AbstractFOSRestController
 {
 
     /**
+     * Get All Products
+     *
      * @Rest\Get("/products")
      */
     public function getProducts() : Response
@@ -25,5 +27,22 @@ class AppController extends AbstractFOSRestController
         $products = $this->getDoctrine()->getRepository(Product::class)->findAll();
 
         return $this->handleView($this->view($products, 200));
+    }
+
+    /**
+     * Get One product
+     *
+     * @param Request $request Request
+     *
+     * @return Response
+     *
+     * @Rest\Get("product/{id}")
+     */
+    public function getOneProduct(Request $request) : Response
+    {
+        $product = $this->getDoctrine()->getRepository(Product::class)->find($request->get('id'));
+
+        return $this->handleView($this->view($product, 200));
+
     }
 }
