@@ -42,13 +42,6 @@ class Product
      */
     private $price;
 
-    /**
-     * @return int
-     */
-    public function getId(): int
-    {
-        return $this->id;
-    }
 
     /**
      * @param int $id
