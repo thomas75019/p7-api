@@ -86,18 +86,14 @@ class AppController extends AbstractFOSRestController
     public function createUser(Request $request)
     {
         $user = new User();
+        $client = $this->getDoctrine()->getRepository(Client::class)->find(1);
 
-        $user->setId(3);
         $form = $this->createForm(UserType::class);
         $data = json_decode($request->getContent(), true);
         $form->submit($data);
 
         if ($form->isValid() && $form->isSubmitted())
         {
-            $client = new Client();
-            $client->setName('test');
-            $client->setSiret(3);
-            var_dump($client->getSiret());
             $user->hydrate($data);
             $user->setClient($client);
 
