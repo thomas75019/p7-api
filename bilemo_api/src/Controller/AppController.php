@@ -107,4 +107,21 @@ class AppController extends AbstractFOSRestController
 
         return $this->handleView($this->view($form->getErrors()));
     }
+
+    /**
+     * @Rest\Delete("/user/{id}")
+     */
+    public function removeUser(Request $request)
+    {
+        $user_id = $request->get('id');
+
+        $user = $this->getDoctrine()->getRepository(User::class)->find($user_id);
+
+        $entity_manager = $this->getDoctrine()->getManager();
+
+        $entity_manager->remove($user);
+        $entity_manager->flush();
+
+        return $this->handleView($this->view(["Status" => "Removed"], Response::HTTP_OK));
+    }
 }
