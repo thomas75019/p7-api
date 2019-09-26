@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Client;
 
 /**
  * User
@@ -24,41 +25,45 @@ class User
     /**
      * @var string
      *
-     * @ORM\Column(name="firstname", type="string", length=255, nullable=false)
+     * @ORM\Column(name="firstname", type="string", length=255, nullable=true)
      */
     private $firstname;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="lastname", type="string", length=255, nullable=false)
+     * @ORM\Column(name="lastname", type="string", length=255, nullable=true)
      */
     private $lastname;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="password", type="string", length=255, nullable=false)
+     * @ORM\Column(name="password", type="string", length=255, nullable=true)
      */
     private $password;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="email", type="string", length=255, nullable=false)
+     * @ORM\Column(name="email", type="string", length=255, nullable=true)
      */
     private $email;
 
     /**
-     * @var \Client
+     * @var Client
      *
-     * @ORM\ManyToOne(targetEntity="Client")
-     * @ORM\JoinColumns({
+     * @ORM\OneToOne(targetEntity="App\Entity\Client", mappedBy="client", cascade={"persist"})
+     * * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="client_id", referencedColumnName="id")
      * })
      */
     private $client;
 
+    public function __construct()
+    {
+        $this->client = new Client();
+    }
 
     /**
      * @param int $id
@@ -71,7 +76,7 @@ class User
     /**
      * @return string
      */
-    public function getFirstname(): string
+    public function getFirstname(): ?string
     {
         return $this->firstname;
     }
@@ -87,7 +92,7 @@ class User
     /**
      * @return string
      */
-    public function getLastname(): string
+    public function getLastname(): ?string
     {
         return $this->lastname;
     }
@@ -103,7 +108,7 @@ class User
     /**
      * @return string
      */
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
@@ -119,7 +124,7 @@ class User
     /**
      * @return string
      */
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
@@ -133,19 +138,29 @@ class User
     }
 
     /**
-     * @return \Client
+     * @return Client
      */
-    public function getClient(): \Client
+    public function getClient(): Client
     {
         return $this->client;
     }
 
     /**
-     * @param \Client $client
+     * @param Client $client
      */
-    public function setClient(\Client $client): void
+    public function setClient(Client $client): void
     {
         $this->client = $client;
+    }
+
+    public function hydrate($data)
+    {
+        foreach ($data as $key => $value) {
+            $method = 'set'.ucfirst($key);
+            if (method_exists($this, $method)) {
+                $this->$method($value);
+            }
+        }
     }
 
 

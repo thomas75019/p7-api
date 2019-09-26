@@ -2,9 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Client;
 use App\Entity\Product;
 use App\Entity\User;
+use App\Form\UserType;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
+use FOS\RestBundle\View\View;
+use FOS\RestBundle\View\ViewHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -51,10 +55,60 @@ class AppController extends AbstractFOSRestController
      *
      * @Rest\Get("/users")
      */
-    public function getAllUsers()
+    public function getAllUsers() : Response
     {
         $users = $this->getDoctrine()->getRepository(User::class)->findAll();
 
         return $this->handleView($this->view($users, 200));
+    }
+
+    /**
+     * Get One user
+     *
+     * @param Request $request Request
+     *
+     * @return Response
+     *
+     * @Rest\Get("/user/{id}")
+     */
+    public function getOneUser(Request $request) : Response
+    {
+        $id_user = $request->get('id');
+
+        $user = $this->getDoctrine()->getRepository(User::class)->find($id_user);
+
+        return $this->handleView($this->view($user, 200));
+    }
+
+    /**
+     * @Rest\Post("/users")
+     */
+    public function createUser(Request $request)
+    {
+        $user = new User();
+
+        $user->setId(3);
+        $form = $this->createForm(UserType::class);
+        $data = json_decode($request->getContent(), true);
+        $form->submit($data);
+
+        if ($form->isValid() && $form->isSubmitted())
+        {
+            $client = new Client();
+            $client->setName('test');
+            $client->setSiret(3);
+            var_dump($client->getSiret());
+            $user->hydrate($data);
+            $user->setClient($client);
+
+            $entity_manager = $this->getDoctrine()->getManager();
+
+            $entity_manager->persist($user);
+            $entity_manager->flush();
+
+            return $this->handleView($this->view(["Status" => "Created"], Response::HTTP_CREATED));
+        }
+
+        return $this->handleView($this->view($form->getErrors()));
     }
 }
