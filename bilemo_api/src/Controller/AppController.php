@@ -7,17 +7,15 @@ use App\Entity\Product;
 use App\Entity\User;
 use App\Form\UserType;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
-use FOS\RestBundle\View\View;
-use FOS\RestBundle\View\ViewHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 /**
- * Product Controller
+ * App Controller
  *
- * @Route("/api",name="api_")
+ * @Route("/api",name="api")
  */
 class AppController extends AbstractFOSRestController
 {
@@ -31,7 +29,7 @@ class AppController extends AbstractFOSRestController
     {
         $products = $this->getDoctrine()->getRepository(Product::class)->findAll();
 
-        return $this->handleView($this->view($products, 200));
+        return $this->handleView($this->view($products, Response::HTTP_OK));
     }
 
     /**
@@ -47,7 +45,7 @@ class AppController extends AbstractFOSRestController
     {
         $product = $this->getDoctrine()->getRepository(Product::class)->find($request->get('id'));
 
-        return $this->handleView($this->view($product, 200));
+        return $this->handleView($this->view($product, Response::HTTP_OK));
     }
 
     /**
@@ -59,7 +57,7 @@ class AppController extends AbstractFOSRestController
     {
         $users = $this->getDoctrine()->getRepository(User::class)->findAll();
 
-        return $this->handleView($this->view($users, 200));
+        return $this->handleView($this->view($users, Response::HTTP_OK));
     }
 
     /**
@@ -77,13 +75,17 @@ class AppController extends AbstractFOSRestController
 
         $user = $this->getDoctrine()->getRepository(User::class)->find($id_user);
 
-        return $this->handleView($this->view($user, 200));
+        return $this->handleView($this->view($user, Response::HTTP_OK));
     }
 
     /**
+     * @param Request $request
+     *
+     * @return Response
+     *
      * @Rest\Post("/users")
      */
-    public function createUser(Request $request)
+    public function createUser(Request $request) : Response
     {
         $user = new User();
         $client = $this->getDoctrine()->getRepository(Client::class)->find(1);
@@ -109,9 +111,13 @@ class AppController extends AbstractFOSRestController
     }
 
     /**
+     * @param Request $request
+     *
+     * @return Response
+     *
      * @Rest\Delete("/user/{id}")
      */
-    public function removeUser(Request $request)
+    public function removeUser(Request $request) : Response
     {
         $user_id = $request->get('id');
 
@@ -122,6 +128,6 @@ class AppController extends AbstractFOSRestController
         $entity_manager->remove($user);
         $entity_manager->flush();
 
-        return $this->handleView($this->view(["Status" => "Removed"], Response::HTTP_OK));
+        return $this->handleView($this->view(["Status" => "Removed"], Response::HTTP_NO_CONTENT));
     }
 }
