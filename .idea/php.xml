@@ -88,6 +88,14 @@
       <path value="$PROJECT_DIR$/bilemo_api/vendor/symfony/process" />
       <path value="$PROJECT_DIR$/bilemo_api/vendor/symfony/maker-bundle" />
       <path value="$PROJECT_DIR$/bilemo_api/vendor/nikic/php-parser" />
+      <path value="$PROJECT_DIR$/bilemo_api/vendor/knpuniversity/oauth2-client-bundle" />
+      <path value="$PROJECT_DIR$/bilemo_api/vendor/guzzlehttp/promises" />
+      <path value="$PROJECT_DIR$/bilemo_api/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/bilemo_api/vendor/guzzlehttp/guzzle" />
+      <path value="$PROJECT_DIR$/bilemo_api/vendor/ralouphie/getallheaders" />
+      <path value="$PROJECT_DIR$/bilemo_api/vendor/league/oauth2-google" />
+      <path value="$PROJECT_DIR$/bilemo_api/vendor/league/oauth2-client" />
+      <path value="$PROJECT_DIR$/bilemo_api/vendor/psr/http-message" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.1" />
