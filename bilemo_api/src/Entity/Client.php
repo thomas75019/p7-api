@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Table(name="Client")
  * @ORM\Entity
  */
-class Client
+class Client implements UserInterface
 {
     /**
      * @var int
@@ -75,4 +75,31 @@ class Client
     {
         $this->siret = $siret;
     }
+
+    public function getRoles()
+    {
+        return array('ROLE_USER');
+    }
+
+    public function getPassword()
+    {
+        return null;
+    }
+
+    public function getSalt()
+    {
+        return null;
+    }
+
+    public function getUsername()
+    {
+        return $this->name;
+    }
+
+    public function eraseCredentials()
+    {
+        return null;
+    }
+
+
 }
