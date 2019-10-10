@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Table(name="Client")
  * @ORM\Entity
  */
-class Client implements UserInterface
+class Client
 {
     /**
      * @var int
