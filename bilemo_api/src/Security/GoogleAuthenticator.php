@@ -45,7 +45,7 @@ class GoogleAuthenticator extends SocialAuthenticator
 
         $name = $googleUser->getName();
 
-        $client = $this->entityManager->getRepository('App:User')
+        $client = $this->entityManager->getRepository('App:Client')
             ->findOneBy(['name' => $name]);
 
         if (!$client) {

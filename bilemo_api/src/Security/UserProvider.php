@@ -31,9 +31,7 @@ class UserProvider implements UserProviderInterface
      */
     public function loadUserByUsername($name)
     {
-        return $this->entityManager->createQueryBuilder()
-            ->select('c')
-            ->from('Client', 'c')
+        return $this->entityManager->createQueryBuilder('c')
             ->where('c.name = :name')
             ->setParameter('name', $name)
             ->getQuery()
