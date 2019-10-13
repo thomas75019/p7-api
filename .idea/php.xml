@@ -96,6 +96,10 @@
       <path value="$PROJECT_DIR$/bilemo_api/vendor/league/oauth2-google" />
       <path value="$PROJECT_DIR$/bilemo_api/vendor/league/oauth2-client" />
       <path value="$PROJECT_DIR$/bilemo_api/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/bilemo_api/vendor/symfony/security-bundle" />
+      <path value="$PROJECT_DIR$/bilemo_api/vendor/symfony/security-guard" />
+      <path value="$PROJECT_DIR$/bilemo_api/vendor/symfony/security-csrf" />
+      <path value="$PROJECT_DIR$/bilemo_api/vendor/symfony/security-http" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.1" />
