@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\SocialAuthenticator;
 use League\OAuth2\Client\Provider\GoogleUser;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
@@ -50,7 +51,7 @@ class GoogleAuthenticator extends SocialAuthenticator
 
         if (!$client) {
             $user = new Client();
-            $user->setName($googleUser->getName());
+            $user->setName($name);
             $user->setSiret('11111111111');
             $this->entityManager->persist($user);
             $this->entityManager->flush();
@@ -72,19 +73,19 @@ class GoogleAuthenticator extends SocialAuthenticator
 
     public function start(Request $request, \Symfony\Component\Security\Core\Exception\AuthenticationException $authException = null)
     {
-        return new RedirectResponse('/login');
+        return new RedirectResponse('/');
     }
 
 
     public function onAuthenticationFailure(Request $request, \Symfony\Component\Security\Core\Exception\AuthenticationException $exception)
     {
-        // TODO: Implement onAuthenticationFailure() method.
+        return new JsonResponse(['status' => 'Error']);
     }
 
 
     public function onAuthenticationSuccess(Request $request, \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token, $providerKey)
     {
-        // TODO: Implement onAuthenticationSuccess() method.
+        return new RedirectResponse('/');
     }
 }
 

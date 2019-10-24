@@ -4,20 +4,20 @@ namespace App\Controller;
 
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class GoogleController extends AbstractFOSRestController
 {
     /**
-     * Link to this controller to start the "connect" process
      *
      * @Route("/connect/google", name="connect_google")
+     *
      * @param ClientRegistry $clientRegistry
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function connectAction(ClientRegistry $clientRegistry)
+    public function connect(ClientRegistry $clientRegistry)
     {
         return $clientRegistry
             ->getClient('google')
@@ -25,18 +25,17 @@ class GoogleController extends AbstractFOSRestController
     }
 
     /**
-     * Facebook redirects to back here afterwards
      *
      * @Route("/connect/google/check", name="connect_google_check")
-     * @param Request $request
-     * @return JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse
+     *
+     * @return Response
      */
-    public function connectCheckAction(Request $request)
+    public function connectCheck()
     {
         if (!$this->getUser()) {
-            return new JsonResponse(array('status' => false, 'message' => "User not found!"));
+            return $this->handleView($this->view(['status' => 'User not found'], Response::HTTP_NOT_FOUND));
         } else {
-            return new JsonResponse(array('status' => true, 'message' => "Connection made"));
+            return $this->handleView($this->view(['status' => 'connexion made'], Response::HTTP_OK));
         }
 
     }
