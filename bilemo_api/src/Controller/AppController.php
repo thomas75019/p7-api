@@ -107,7 +107,7 @@ class AppController extends AbstractFOSRestController
             return $this->handleView($this->view(["Status" => "Created"], Response::HTTP_CREATED));
         }
 
-        return $this->handleView($this->view($form->getErrors()));
+        return $this->handleView($this->view($form->getErrors(), Response::HTTP_BAD_REQUEST));
     }
 
     /**
