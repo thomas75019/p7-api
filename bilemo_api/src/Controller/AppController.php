@@ -96,7 +96,6 @@ class AppController extends AbstractFOSRestController
 
         if ($form->isValid() && $form->isSubmitted())
         {
-            $user->hydrate($data);
             $user->setClient($client);
 
             $entity_manager = $this->getDoctrine()->getManager();
