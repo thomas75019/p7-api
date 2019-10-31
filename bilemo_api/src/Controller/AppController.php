@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use JMS\SerializerBundle\Serializer;
 
 /**
  * App Controller
@@ -96,8 +97,8 @@ class AppController extends AbstractFOSRestController
 
         if ($form->isValid() && $form->isSubmitted())
         {
-
             $user->setClient($client);
+            $user->hydrate($data);
 
             $entity_manager = $this->getDoctrine()->getManager();
 
@@ -107,7 +108,9 @@ class AppController extends AbstractFOSRestController
             return $this->handleView($this->view(["Status" => "Created"], Response::HTTP_CREATED));
         }
 
+        //var_dump($form->getErrors());
         return $this->handleView($this->view($form->getErrors(), Response::HTTP_BAD_REQUEST));
+
     }
 
     /**
