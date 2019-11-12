@@ -100,6 +100,11 @@
       <path value="$PROJECT_DIR$/bilemo_api/vendor/symfony/security-guard" />
       <path value="$PROJECT_DIR$/bilemo_api/vendor/symfony/security-csrf" />
       <path value="$PROJECT_DIR$/bilemo_api/vendor/symfony/security-http" />
+      <path value="$PROJECT_DIR$/bilemo_api/vendor/willdurand/hateoas" />
+      <path value="$PROJECT_DIR$/bilemo_api/vendor/willdurand/hateoas-bundle" />
+      <path value="$PROJECT_DIR$/bilemo_api/vendor/symfony/expression-language" />
+      <path value="$PROJECT_DIR$/bilemo_api/vendor/doctrine/data-fixtures" />
+      <path value="$PROJECT_DIR$/bilemo_api/vendor/doctrine/doctrine-fixtures-bundle" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.1" />

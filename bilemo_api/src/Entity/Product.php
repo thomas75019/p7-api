@@ -3,12 +3,21 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Hateoas\Configuration\Annotation as Hateoas;
 
 /**
  * Product
  *
  * @ORM\Table(name="Product")
  * @ORM\Entity
+ *
+ * @Hateoas\Relation(
+ *     "self",
+ *     href = @Hateoas\Route(
+ *         "api_get_one_product",
+ *         parameters = { "id" = "expr(object.getId())" }
+ *     )
+ * )
  */
 class Product
 {
@@ -49,6 +58,14 @@ class Product
     public function setId(int $id): void
     {
         $this->id = $id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
     }
 
     /**

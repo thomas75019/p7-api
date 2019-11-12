@@ -4,12 +4,30 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Client;
+use Hateoas\Configuration\Annotation as Hateoas;
 
 /**
  * User
  *
  * @ORM\Table(name="User", indexes={@ORM\Index(name="client_user_fk", columns={"client_id"})})
  * @ORM\Entity
+ *
+ *
+ * @Hateoas\Relation(
+ *     "self",
+ *     href = @Hateoas\Route(
+ *         "api_get_one_user",
+ *         parameters = { "id" = "expr(object.getId())" }
+ *     )
+ * )
+ * @Hateoas\Relation(
+ *     "delete",
+ *     href = @Hateoas\Route(
+ *         "api_delete_user",
+ *         parameters = { "id" = "expr(object.getId())" },
+ *         absolute = true
+ *     )
+ * )
  */
 class User
 {
@@ -60,17 +78,20 @@ class User
      */
     private $client;
 
-    public function __construct()
-    {
-        $this->client = new Client();
-    }
-
     /**
      * @param int $id
      */
     public function setId(int $id): void
     {
         $this->id = $id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
     }
 
     /**

@@ -9,6 +9,7 @@ use App\Form\UserType;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use JMS\SerializerBundle\Serializer;
@@ -16,7 +17,7 @@ use JMS\SerializerBundle\Serializer;
 /**
  * App Controller
  *
- * @Route("/api",name="api")
+ * @Route("/api",name="api_")
  */
 class AppController extends AbstractFOSRestController
 {
@@ -24,7 +25,7 @@ class AppController extends AbstractFOSRestController
     /**
      * Get All Products
      *
-     * @Rest\Get("/products")
+     * @Rest\Get("/products", name="get_products")
      */
     public function getProducts() : Response
     {
@@ -40,7 +41,7 @@ class AppController extends AbstractFOSRestController
      *
      * @return Response
      *
-     * @Rest\Get("/product/{id}")
+     * @Get("/product/{id}", name="get_one_product")
      */
     public function getOneProduct(Request $request) : Response
     {
@@ -52,7 +53,7 @@ class AppController extends AbstractFOSRestController
     /**
      * Get All Users
      *
-     * @Rest\Get("/users")
+     * @Rest\Get("/users", name="get_all_users")
      */
     public function getAllUsers() : Response
     {
@@ -68,7 +69,7 @@ class AppController extends AbstractFOSRestController
      *
      * @return Response
      *
-     * @Rest\Get("/user/{id}")
+     * @Rest\Get("/user/{id}", name="get_one_user")
      */
     public function getOneUser(Request $request) : Response
     {
@@ -84,12 +85,11 @@ class AppController extends AbstractFOSRestController
      *
      * @return Response
      *
-     * @Rest\Post("/users")
+     * @Rest\Post("/users", name="create_user")
      */
     public function createUser(Request $request) : Response
     {
         $user = new User();
-        $client = $this->getDoctrine()->getRepository(Client::class)->find(1);
 
         $form = $this->createForm(UserType::class);
         $data = json_decode($request->getContent(), true);
@@ -97,7 +97,7 @@ class AppController extends AbstractFOSRestController
 
         if ($form->isValid() && $form->isSubmitted())
         {
-            $user->setClient($client);
+            $user->setClient($this->getUser());
             $user->hydrate($data);
 
             $entity_manager = $this->getDoctrine()->getManager();
@@ -117,7 +117,7 @@ class AppController extends AbstractFOSRestController
      *
      * @return Response
      *
-     * @Rest\Delete("/user/{id}")
+     * @Rest\Delete("/user/{id}", name="delete_user")
      */
     public function removeUser(Request $request) : Response
     {
