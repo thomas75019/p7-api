@@ -14,11 +14,16 @@ use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use JMS\SerializerBundle\Serializer;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
+
 
 /**
  * App Controller
  *
  * @Route("/api",name="api_")
+ *
+ *
+ *
  */
 class AppController extends AbstractFOSRestController
 {
@@ -27,6 +32,7 @@ class AppController extends AbstractFOSRestController
      * Get All Products
      *
      * @Rest\Get("/products", name="get_products")
+     * @Cache(smaxage="15")
      */
     public function getProducts() : Response
     {
@@ -43,6 +49,8 @@ class AppController extends AbstractFOSRestController
      * @return Response
      *
      * @Get("/product/{id}", name="get_one_product")
+     *
+     * @Cache(smaxage="15")
      */
     public function getOneProduct(Request $request) : Response
     {
@@ -55,6 +63,7 @@ class AppController extends AbstractFOSRestController
      * Get All Users
      *
      * @Rest\Get("/users", name="get_all_users")
+     * @Cache(smaxage="15")
      */
     public function getAllUsers() : Response
     {
@@ -71,6 +80,7 @@ class AppController extends AbstractFOSRestController
      * @return Response
      *
      * @Rest\Get("/user/{id}", name="get_one_user")
+     * @Cache(smaxage="15")
      */
     public function getOneUser(Request $request) : Response
     {
