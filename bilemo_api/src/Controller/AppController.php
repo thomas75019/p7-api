@@ -14,6 +14,7 @@ use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use JMS\SerializerBundle\Serializer;
+use Nelmio\ApiDocBundle\SwaggerPhp as SWG;
 
 /**
  * App Controller
@@ -27,6 +28,16 @@ class AppController extends AbstractFOSRestController
      * Get All Products
      *
      * @Rest\Get("/products", name="get_products")
+     *
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns the rewards of an user",
+     *     @SWG\Schema(
+     *         type="array",
+     *         @SWG\Items(ref=@Model(type=Reward::class, groups={"full"}))
+     *     )
+     * )
+     *
      */
     public function getProducts() : Response
     {
