@@ -112,6 +112,7 @@ class AppController extends AbstractFOSRestController
 
         if ($form->isValid() && $form->isSubmitted())
         {
+            //This is just in a purpose of test
             $user->setClient($this->getUser());
             $user->hydrate($data);
 
