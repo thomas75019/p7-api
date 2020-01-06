@@ -6,15 +6,13 @@ use App\Entity\Client;
 use App\Entity\Product;
 use App\Entity\User;
 use App\Form\UserType;
+use App\Service\CacheHandler;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use JMS\SerializerBundle\Serializer;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 
 
 /**
@@ -32,25 +30,28 @@ class AppController extends AbstractFOSRestController
      * Get All Products
      *
      * @Rest\Get("/products", name="get_products")
-     * @Cache(smaxage="15")
      */
-    public function getProducts() : Response
+    public function getProducts(CacheHandler $handler) : Response
     {
         $products = $this->getDoctrine()->getRepository(Product::class)->findAll();
 
-        return $this->handleView($this->view($products, Response::HTTP_OK));
+        $response = $this->handleView($this->view($products, Response::HTTP_OK));
+
+        $handler->startCache($response)->setEtag($response->getContent())->setSharedMaxAge(10);
+        var_dump($response->isCacheable());
+
+        return $response;
     }
 
     /**
      * Get One product
      *
-     * @param Request $request Request
+     * @param Request $request
      *
      * @return Response
      *
      * @Get("/product/{id}", name="get_one_product")
      *
-     * @Cache(smaxage="15")
      */
     public function getOneProduct(Request $request) : Response
     {
@@ -63,13 +64,16 @@ class AppController extends AbstractFOSRestController
      * Get All Users
      *
      * @Rest\Get("/users", name="get_all_users")
-     * @Cache(smaxage="15")
      */
-    public function getAllUsers() : Response
+    public function getAllUsers(CacheHandler $handler) : Response
     {
         $users = $this->getDoctrine()->getRepository(User::class)->findAll();
 
-        return $this->handleView($this->view($users, Response::HTTP_OK));
+        $response = $this->handleView($this->view($users, Response::HTTP_OK));
+
+        $handler->startCache($response)->setEtag($response->getContent())->setSharedMaxAge(10);
+
+        return $response;
     }
 
     /**
@@ -80,7 +84,6 @@ class AppController extends AbstractFOSRestController
      * @return Response
      *
      * @Rest\Get("/user/{id}", name="get_one_user")
-     * @Cache(smaxage="15")
      */
     public function getOneUser(Request $request) : Response
     {
@@ -97,6 +100,7 @@ class AppController extends AbstractFOSRestController
      * @return Response
      *
      * @Rest\Post("/users", name="create_user")
+     *
      */
     public function createUser(Request $request) : Response
     {
@@ -129,6 +133,7 @@ class AppController extends AbstractFOSRestController
      * @return Response
      *
      * @Rest\Delete("/user/{id}", name="delete_user")
+     *
      */
     public function removeUser(Request $request) : Response
     {
