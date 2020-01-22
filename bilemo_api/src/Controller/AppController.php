@@ -6,8 +6,8 @@ use App\Entity\Client;
 use App\Entity\Product;
 use App\Entity\User;
 use App\Form\UserType;
+use App\Service\CacheHandler;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations\Get;
@@ -20,6 +20,9 @@ use Nelmio\ApiDocBundle\SwaggerPhp as SWG;
  * App Controller
  *
  * @Route("/api",name="api_")
+ *
+ *
+ *
  */
 class AppController extends AbstractFOSRestController
 {
@@ -39,21 +42,27 @@ class AppController extends AbstractFOSRestController
      * )
      *
      */
-    public function getProducts() : Response
+    public function getProducts(CacheHandler $handler) : Response
     {
         $products = $this->getDoctrine()->getRepository(Product::class)->findAll();
 
-        return $this->handleView($this->view($products, Response::HTTP_OK));
+        $response = $this->handleView($this->view($products, Response::HTTP_OK));
+
+        $handler->startCache($response)->setEtag($response->getContent())->setSharedMaxAge(10);
+        var_dump($response->isCacheable());
+
+        return $response;
     }
 
     /**
      * Get One product
      *
-     * @param Request $request Request
+     * @param Request $request
      *
      * @return Response
      *
      * @Get("/product/{id}", name="get_one_product")
+     *
      */
     public function getOneProduct(Request $request) : Response
     {
@@ -67,11 +76,15 @@ class AppController extends AbstractFOSRestController
      *
      * @Rest\Get("/users", name="get_all_users")
      */
-    public function getAllUsers() : Response
+    public function getAllUsers(CacheHandler $handler) : Response
     {
         $users = $this->getDoctrine()->getRepository(User::class)->findAll();
 
-        return $this->handleView($this->view($users, Response::HTTP_OK));
+        $response = $this->handleView($this->view($users, Response::HTTP_OK));
+
+        $handler->startCache($response)->setEtag($response->getContent())->setSharedMaxAge(10);
+
+        return $response;
     }
 
     /**
@@ -98,6 +111,7 @@ class AppController extends AbstractFOSRestController
      * @return Response
      *
      * @Rest\Post("/users", name="create_user")
+     *
      */
     public function createUser(Request $request) : Response
     {
@@ -109,6 +123,7 @@ class AppController extends AbstractFOSRestController
 
         if ($form->isValid() && $form->isSubmitted())
         {
+            //This is just in a purpose of test
             $user->setClient($this->getUser());
             $user->hydrate($data);
 
@@ -130,6 +145,7 @@ class AppController extends AbstractFOSRestController
      * @return Response
      *
      * @Rest\Delete("/user/{id}", name="delete_user")
+     *
      */
     public function removeUser(Request $request) : Response
     {
