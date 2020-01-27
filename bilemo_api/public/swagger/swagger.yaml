@@ -1,0 +1,57 @@
+swagger: '2.0'
+info:
+  title: Bilemo Api
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:8000
+paths:
+  /api/products:
+    get:
+      summary: Get All Products
+      responses:
+        '200':
+          description: Returns all products
+  '/api/product/{id}':
+    get:
+      summary: Get One product
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Returns one product
+  /api/users:
+    get:
+      summary: Get All Users
+      responses:
+        '200':
+          description: Returns all users
+    post:
+      summary: Create an user
+      responses:
+        '201':
+          description: Create an user
+  '/api/user/{id}':
+    get:
+      summary: Get One user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Returns one user
+    delete:
+      summary: Delete an user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '204':
+          description: Removes an user
+host: 127.0.0.1

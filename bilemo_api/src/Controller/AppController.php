@@ -14,15 +14,12 @@ use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use JMS\SerializerBundle\Serializer;
-use Nelmio\ApiDocBundle\SwaggerPhp as SWG;
+use Swagger\Annotations as SWG;
 
 /**
  * App Controller
  *
  * @Route("/api",name="api_")
- *
- *
- *
  */
 class AppController extends AbstractFOSRestController
 {
@@ -34,13 +31,9 @@ class AppController extends AbstractFOSRestController
      *
      * @SWG\Response(
      *     response=200,
-     *     description="Returns the rewards of an user",
-     *     @SWG\Schema(
-     *         type="array",
-     *         @SWG\Items(ref=@Model(type=Reward::class, groups={"full"}))
+     *     description="Returns all products"
      *     )
      * )
-     *
      */
     public function getProducts(CacheHandler $handler) : Response
     {
@@ -63,6 +56,13 @@ class AppController extends AbstractFOSRestController
      *
      * @Get("/product/{id}", name="get_one_product")
      *
+     *
+     * @SWG\Response(
+     *    response=200,
+     *    description="Returns one product"
+     *   )
+     * )
+     *
      */
     public function getOneProduct(Request $request) : Response
     {
@@ -75,6 +75,12 @@ class AppController extends AbstractFOSRestController
      * Get All Users
      *
      * @Rest\Get("/users", name="get_all_users")
+     *
+     * @SWG\Response(
+     *    response=200,
+     *    description="Returns all users"
+     *   )
+     * )
      */
     public function getAllUsers(CacheHandler $handler) : Response
     {
@@ -95,6 +101,12 @@ class AppController extends AbstractFOSRestController
      * @return Response
      *
      * @Rest\Get("/user/{id}", name="get_one_user")
+     *
+     * @SWG\Response(
+     *    response=200,
+     *    description="Returns one user"
+     *   )
+     * )
      */
     public function getOneUser(Request $request) : Response
     {
@@ -112,6 +124,11 @@ class AppController extends AbstractFOSRestController
      *
      * @Rest\Post("/users", name="create_user")
      *
+     * @SWG\Response(
+     *    response=201,
+     *    description="Create an user"
+     *   )
+     * )
      */
     public function createUser(Request $request) : Response
     {
@@ -146,6 +163,11 @@ class AppController extends AbstractFOSRestController
      *
      * @Rest\Delete("/user/{id}", name="delete_user")
      *
+     * @SWG\Response(
+     *    response=204,
+     *    description="Removes an user"
+     *   )
+     * )
      */
     public function removeUser(Request $request) : Response
     {
