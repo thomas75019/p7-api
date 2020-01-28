@@ -7,34 +7,52 @@ servers:
 paths:
   /api/products:
     get:
+      tags:
+        - Products
       summary: Get All Products
       responses:
         '200':
           description: Returns all products
   '/api/product/{id}':
     get:
+      tags:
+        - Products
       summary: Get One product
       parameters:
         - name: id
           in: path
           required: true
-          type: string
+          type: integer
       responses:
         '200':
           description: Returns one product
   /api/users:
     get:
+      tags:
+        - User
       summary: Get All Users
       responses:
         '200':
           description: Returns all users
     post:
+      tags:
+        - User
       summary: Create an user
+      parameters:
+        - name: id
+          in: header
+          required: true
+          type: string
+      required: true
       responses:
         '201':
           description: Create an user
+        '400':
+          description: Bad request
   '/api/user/{id}':
     get:
+      tags:
+        - User
       summary: Get One user
       parameters:
         - name: id
@@ -45,6 +63,8 @@ paths:
         '200':
           description: Returns one user
     delete:
+      tags:
+        - User
       summary: Delete an user
       parameters:
         - name: id
@@ -54,4 +74,6 @@ paths:
       responses:
         '204':
           description: Removes an user
+        '400':
+          description: Bad Request
 host: 127.0.0.1
