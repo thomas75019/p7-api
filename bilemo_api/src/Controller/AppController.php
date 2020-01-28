@@ -39,12 +39,16 @@ class AppController extends AbstractFOSRestController
     {
         $products = $this->getDoctrine()->getRepository(Product::class)->findAll();
 
-        $response = $this->handleView($this->view($products, Response::HTTP_OK));
+        if ($products)
+        {
+            $response = $this->handleView($this->view($products, Response::HTTP_OK));
 
-        $handler->startCache($response)->setEtag($response->getContent())->setSharedMaxAge(10);
-        var_dump($response->isCacheable());
+            $handler->startCache($response)->setEtag($response->getContent())->setSharedMaxAge(10);
 
-        return $response;
+            return $response;
+        }
+
+        return $this->handleView($this->view([Response::HTTP_NOT_FOUND => 'No products found'], Response::HTTP_NOT_FOUND));
     }
 
     /**
@@ -66,9 +70,20 @@ class AppController extends AbstractFOSRestController
      */
     public function getOneProduct(Request $request) : Response
     {
-        $product = $this->getDoctrine()->getRepository(Product::class)->find($request->get('id'));
+        $product_id = $request->get('id');
+        $product = $this->getDoctrine()->getRepository(Product::class)->find($product_id);
 
-        return $this->handleView($this->view($product, Response::HTTP_OK));
+        if (!is_int($product_id))
+        {
+            return $this->handleView($this->view([Response::HTTP_BAD_REQUEST => 'URL is not valid'], Response::HTTP_BAD_REQUEST));
+        }
+
+        if ($product)
+        {
+            return $this->handleView($this->view($product, Response::HTTP_OK));
+        }
+
+        return $this->handleView($this->view([Response::HTTP_NOT_FOUND => 'Product not found'], Response::HTTP_NOT_FOUND));
     }
 
     /**
@@ -86,11 +101,18 @@ class AppController extends AbstractFOSRestController
     {
         $users = $this->getDoctrine()->getRepository(User::class)->findAll();
 
-        $response = $this->handleView($this->view($users, Response::HTTP_OK));
+        if ($users)
+        {
+            $response = $this->handleView($this->view($users, Response::HTTP_OK));
 
-        $handler->startCache($response)->setEtag($response->getContent())->setSharedMaxAge(10);
+            $handler->startCache($response)->setEtag($response->getContent())->setSharedMaxAge(10);
 
-        return $response;
+            return $response;
+        }
+
+        return $this->handleView($this->view([Response::HTTP_NOT_FOUND => 'No users found'], Response::HTTP_NOT_FOUND));
+
+
     }
 
     /**
@@ -112,9 +134,19 @@ class AppController extends AbstractFOSRestController
     {
         $id_user = $request->get('id');
 
+        if (!is_int($id_user))
+        {
+            return $this->handleView($this->view([Response::HTTP_BAD_REQUEST => 'URL is not valid'], Response::HTTP_BAD_REQUEST));
+        }
+
         $user = $this->getDoctrine()->getRepository(User::class)->find($id_user);
 
-        return $this->handleView($this->view($user, Response::HTTP_OK));
+        if ($user)
+        {
+            return $this->handleView($this->view($user, Response::HTTP_OK));
+        }
+
+        return $this->handleView($this->view([Response::HTTP_NOT_FOUND => 'User not found']));
     }
 
     /**
@@ -174,6 +206,12 @@ class AppController extends AbstractFOSRestController
         $user_id = $request->get('id');
 
         $user = $this->getDoctrine()->getRepository(User::class)->find($user_id);
+
+        if (!$user)
+        {
+            return $this->handleView($this->view([Response::HTTP_BAD_REQUEST => 'Bad Request'], Response::HTTP_BAD_REQUEST));
+        }
+
 
         $entity_manager = $this->getDoctrine()->getManager();
 
