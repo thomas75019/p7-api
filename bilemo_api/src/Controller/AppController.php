@@ -52,7 +52,7 @@ class AppController extends AbstractFOSRestController
             return $response;
         }
 
-        return $this->handleView($this->view([Response::HTTP_NOT_FOUND => 'No products found'], Response::HTTP_NOT_FOUND));
+        return $this->handleView($this->view([Response::HTTP_NOT_FOUND => 'Page not found'], Response::HTTP_NOT_FOUND));
     }
 
     /**
@@ -104,7 +104,7 @@ class AppController extends AbstractFOSRestController
     public function getAllUsers(CacheHandler $handler, Request $request, UserRepository $repository) : Response
     {
         $page = $request->get('page');
-        $users = iterator_to_array($repository->findAllUsers($page, 1));
+        $users = iterator_to_array($repository->findAllUsers($page, 10));
 
         if ($users)
         {
