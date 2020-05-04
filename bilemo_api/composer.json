@@ -11,6 +11,7 @@
         "jms/serializer-bundle": "^3.4",
         "knpuniversity/oauth2-client-bundle": "^1.29",
         "league/oauth2-google": "^3.0",
+        "nelmio/api-doc-bundle": "^3.5",
         "php-http/guzzle6-adapter": "^2.0",
         "sensio/framework-extra-bundle": "^5.4",
         "symfony/console": "4.3.*",
@@ -20,8 +21,10 @@
         "symfony/framework-bundle": "4.3.*",
         "symfony/orm-pack": "^1.0",
         "symfony/security-bundle": "4.3.*",
+        "symfony/serializer": "4.3.*",
         "symfony/validator": "4.3.*",
         "symfony/yaml": "4.3.*",
+        "twig/twig": "^2.0",
         "willdurand/hateoas-bundle": "^2.0"
     },
     "require-dev": {

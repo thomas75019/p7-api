@@ -13,15 +13,13 @@ use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-
+use JMS\SerializerBundle\Serializer;
+use Swagger\Annotations as SWG;
 
 /**
  * App Controller
  *
  * @Route("/api",name="api_")
- *
- *
- *
  */
 class AppController extends AbstractFOSRestController
 {
@@ -30,17 +28,27 @@ class AppController extends AbstractFOSRestController
      * Get All Products
      *
      * @Rest\Get("/products", name="get_products")
+     *
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns all products"
+     *     )
+     * )
      */
     public function getProducts(CacheHandler $handler) : Response
     {
         $products = $this->getDoctrine()->getRepository(Product::class)->findAll();
 
-        $response = $this->handleView($this->view($products, Response::HTTP_OK));
+        if ($products)
+        {
+            $response = $this->handleView($this->view($products, Response::HTTP_OK));
 
-        $handler->startCache($response)->setEtag($response->getContent())->setSharedMaxAge(10);
-        var_dump($response->isCacheable());
+            $handler->startCache($response)->setEtag($response->getContent())->setSharedMaxAge(10);
 
-        return $response;
+            return $response;
+        }
+
+        return $this->handleView($this->view([Response::HTTP_NOT_FOUND => 'No products found'], Response::HTTP_NOT_FOUND));
     }
 
     /**
@@ -52,28 +60,54 @@ class AppController extends AbstractFOSRestController
      *
      * @Get("/product/{id}", name="get_one_product")
      *
+     *
+     * @SWG\Response(
+     *    response=200,
+     *    description="Returns one product"
+     *   )
+     * )
+     *
      */
     public function getOneProduct(Request $request) : Response
     {
-        $product = $this->getDoctrine()->getRepository(Product::class)->find($request->get('id'));
+        $product_id = $request->get('id');
+        $product = $this->getDoctrine()->getRepository(Product::class)->find($product_id);
 
-        return $this->handleView($this->view($product, Response::HTTP_OK));
+        if ($product)
+        {
+            return $this->handleView($this->view($product, Response::HTTP_OK));
+        }
+
+        return $this->handleView($this->view([Response::HTTP_NOT_FOUND => 'Product not found'], Response::HTTP_NOT_FOUND));
     }
 
     /**
      * Get All Users
      *
      * @Rest\Get("/users", name="get_all_users")
+     *
+     * @SWG\Response(
+     *    response=200,
+     *    description="Returns all users"
+     *   )
+     * )
      */
     public function getAllUsers(CacheHandler $handler) : Response
     {
         $users = $this->getDoctrine()->getRepository(User::class)->findAll();
 
-        $response = $this->handleView($this->view($users, Response::HTTP_OK));
+        if ($users)
+        {
+            $response = $this->handleView($this->view($users, Response::HTTP_OK));
 
-        $handler->startCache($response)->setEtag($response->getContent())->setSharedMaxAge(10);
+            $handler->startCache($response)->setEtag($response->getContent())->setSharedMaxAge(10);
 
-        return $response;
+            return $response;
+        }
+
+        return $this->handleView($this->view([Response::HTTP_NOT_FOUND => 'No users found'], Response::HTTP_NOT_FOUND));
+
+
     }
 
     /**
@@ -84,14 +118,30 @@ class AppController extends AbstractFOSRestController
      * @return Response
      *
      * @Rest\Get("/user/{id}", name="get_one_user")
+     *
+     * @SWG\Response(
+     *    response=200,
+     *    description="Returns one user"
+     *   )
+     * )
      */
     public function getOneUser(Request $request) : Response
     {
         $id_user = $request->get('id');
 
+        if (!is_int($id_user))
+        {
+            return $this->handleView($this->view([Response::HTTP_BAD_REQUEST => 'URL is not valid'], Response::HTTP_BAD_REQUEST));
+        }
+
         $user = $this->getDoctrine()->getRepository(User::class)->find($id_user);
 
-        return $this->handleView($this->view($user, Response::HTTP_OK));
+        if ($user)
+        {
+            return $this->handleView($this->view($user, Response::HTTP_OK));
+        }
+
+        return $this->handleView($this->view([Response::HTTP_NOT_FOUND => 'User not found']));
     }
 
     /**
@@ -101,6 +151,11 @@ class AppController extends AbstractFOSRestController
      *
      * @Rest\Post("/users", name="create_user")
      *
+     * @SWG\Response(
+     *    response=201,
+     *    description="Create an user"
+     *   )
+     * )
      */
     public function createUser(Request $request) : Response
     {
@@ -135,12 +190,23 @@ class AppController extends AbstractFOSRestController
      *
      * @Rest\Delete("/user/{id}", name="delete_user")
      *
+     * @SWG\Response(
+     *    response=204,
+     *    description="Removes an user"
+     *   )
+     * )
      */
     public function removeUser(Request $request) : Response
     {
         $user_id = $request->get('id');
 
         $user = $this->getDoctrine()->getRepository(User::class)->find($user_id);
+
+        if (!$user)
+        {
+            return $this->handleView($this->view([Response::HTTP_BAD_REQUEST => 'Bad Request'], Response::HTTP_BAD_REQUEST));
+        }
+
 
         $entity_manager = $this->getDoctrine()->getManager();
 
