@@ -156,9 +156,10 @@ class AppController extends AbstractFOSRestController
      *   )
      * )
      */
-    public function createUser(Request $request, \Symfony\Component\Serializer\Serializer $serializer) : Response
+    public function createUser(Request $request) : Response
     {
         $user = new User();
+        $serializer = $this->container->get('serializer');
 
         $form = $this->createForm(UserType::class);
         //$data = json_decode($request->getContent(), true);

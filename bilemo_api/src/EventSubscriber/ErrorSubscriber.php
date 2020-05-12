@@ -7,7 +7,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 class ErrorSubscriber implements EventSubscriberInterface
 {
@@ -34,6 +34,7 @@ class ErrorSubscriber implements EventSubscriberInterface
             }
         }*/
 
+
         if (null == $result) {
             $result['code'] = Response::HTTP_BAD_REQUEST;
 
@@ -43,10 +44,12 @@ class ErrorSubscriber implements EventSubscriberInterface
             ];
         }
 
-
         $body = $this->serializer->serialize($result['body'], 'json');
 
-        $event->setResponse(new Response($body, $result['code']));
+        $response = new Response($body, $result['code']);
+
+        $event->setResponse($response);
+
     }
 
     public function addNormalizer(NormalizerInterface $normalizer)

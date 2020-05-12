@@ -50,11 +50,12 @@ paths:
           description: Returns all users
         '404':
           description: No user found
+  '/api/users':
     post:
       tags:
         - User
       summary: Create an user
-      parameters:
+      requestBody:
         - name: id
           in: header
           required: true
