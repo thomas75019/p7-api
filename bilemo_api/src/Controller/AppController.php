@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use JMS\SerializerBundle\Serializer;
+use FOS\RestBundle\Serializer;
 use Swagger\Annotations as SWG;
 
 /**
@@ -25,7 +25,6 @@ use Swagger\Annotations as SWG;
  */
 class AppController extends AbstractFOSRestController
 {
-
     /**
      * Get All Products
      *
@@ -77,11 +76,6 @@ class AppController extends AbstractFOSRestController
         $product_id = $request->get('id');
         $product = $this->getDoctrine()->getRepository(Product::class)->find($product_id);
 
-        if (!is_int($product_id))
-        {
-            return $this->handleView($this->view([Response::HTTP_BAD_REQUEST => 'URL is not valid'], Response::HTTP_BAD_REQUEST));
-        }
-
         if ($product)
         {
             return $this->handleView($this->view($product, Response::HTTP_OK));
@@ -115,7 +109,7 @@ class AppController extends AbstractFOSRestController
             return $response;
         }
 
-        return $this->handleView($this->view([Response::HTTP_NOT_FOUND => 'No users found'], Response::HTTP_NOT_FOUND));
+        return $this->handleView($this->view([Response::HTTP_NOT_FOUND => 'Users not found'], Response::HTTP_NOT_FOUND));
 
 
     }
@@ -138,14 +132,6 @@ class AppController extends AbstractFOSRestController
     public function getOneUser(Request $request) : Response
     {
         $id_user = $request->get('id');
-
-        var_dump($id_user);
-
-       /* if (is_int($id_user) == false)
-        {
-            var_dump($id_user);
-            return $this->handleView($this->view([Response::HTTP_BAD_REQUEST => 'URL is not valid'], Response::HTTP_BAD_REQUEST));
-        }*/
 
         $user = $this->getDoctrine()->getRepository(User::class)->find($id_user);
 
@@ -170,12 +156,13 @@ class AppController extends AbstractFOSRestController
      *   )
      * )
      */
-    public function createUser(Request $request) : Response
+    public function createUser(Request $request, \Symfony\Component\Serializer\Serializer $serializer) : Response
     {
         $user = new User();
 
         $form = $this->createForm(UserType::class);
-        $data = json_decode($request->getContent(), true);
+        //$data = json_decode($request->getContent(), true);
+        $data = $serializer->deserialize($request->getContent(), User::class, 'json');
         $form->submit($data);
 
         if ($form->isValid() && $form->isSubmitted())
@@ -217,7 +204,12 @@ class AppController extends AbstractFOSRestController
 
         if (!$user)
         {
-            return $this->handleView($this->view([Response::HTTP_BAD_REQUEST => 'Bad Request'], Response::HTTP_BAD_REQUEST));
+            return $this->handleView($this->view(
+                [
+                    Response::HTTP_BAD_REQUEST => 'Bad Request, no user found'
+                ],
+                Response::HTTP_BAD_REQUEST
+            ));
         }
 
 

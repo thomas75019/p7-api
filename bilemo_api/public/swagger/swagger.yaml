@@ -4,8 +4,6 @@ info:
   version: 1.0.1
   servers:
     - url: http://127.0.0.1:8000
-servers:
-  - url: http://127.0.0.1:8000
 paths:
   /api/products/{page}:
     get:
