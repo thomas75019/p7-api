@@ -162,8 +162,8 @@ class AppController extends AbstractFOSRestController
         $serializer = $this->container->get('serializer');
 
         $form = $this->createForm(UserType::class);
-        //$data = json_decode($request->getContent(), true);
-        $data = $serializer->deserialize($request->getContent(), User::class, 'json');
+        $data = json_decode($request->getContent(), true);
+        //$data = $serializer->deserialize($request->getContent(), User::class, 'json');
         $form->submit($data);
 
         if ($form->isValid() && $form->isSubmitted())

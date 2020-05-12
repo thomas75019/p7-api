@@ -13,26 +13,26 @@ class ErrorSubscriber implements EventSubscriberInterface
 {
     private $serializer;
     private $normalizers;
-    private $exception;
 
 
-    public function __construct(SerializerInterface $serializer)
+    public function __construct(SerializerInterface $serializer, NormalizerInterface $normalizer)
     {
         $this->serializer = $serializer;
-        $this->exception = \Exception::class;
+        $this->normalizers[] = $normalizer;
+
     }
 
     public function processException(ExceptionEvent $event)
     {
         $result = null;
 
-        /*foreach ($this->normalizers as $normalizer) {
+        foreach ($this->normalizers as $normalizer) {
             if ($normalizer->supports($event->getException())) {
                 $result = $normalizer->normalize($event->getException());
 
                 break;
             }
-        }*/
+        }
 
 
         if (null == $result) {
@@ -54,7 +54,6 @@ class ErrorSubscriber implements EventSubscriberInterface
 
     public function addNormalizer(NormalizerInterface $normalizer)
     {
-        $this->normalizers[] = $normalizer;
     }
 
     public static function getSubscribedEvents()
