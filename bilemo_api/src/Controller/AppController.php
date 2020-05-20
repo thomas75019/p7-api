@@ -5,8 +5,12 @@ namespace App\Controller;
 use App\Entity\Client;
 use App\Entity\Product;
 use App\Entity\User;
+use App\ErrorHandler\FormErrorHandler;
 use App\Form\UserType;
+use App\Normalizer\NormalizerInterface;
+use App\Repository\UserRepository;
 use App\Service\CacheHandler;
+use function Clue\StreamFilter\append;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,6 +19,9 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use JMS\SerializerBundle\Serializer;
 use Swagger\Annotations as SWG;
+use Symfony\Component\Serializer\Normalizer\ConstraintViolationListNormalizer;
+use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * App Controller
@@ -97,9 +104,11 @@ class AppController extends AbstractFOSRestController
      *   )
      * )
      */
-    public function getAllUsers(CacheHandler $handler) : Response
+    public function getAllUsers(CacheHandler $handler, UserRepository $repository, Request $request) : Response
     {
         $users = $this->getDoctrine()->getRepository(User::class)->findAll();
+        $page = $request->get('page');
+        $users = iterator_to_array($repository->findAllUsers($page, 10));
 
         if ($users)
         {
@@ -162,7 +171,7 @@ class AppController extends AbstractFOSRestController
      *   )
      * )
      */
-    public function createUser(Request $request) : Response
+    public function createUser(Request $request, ValidatorInterface $validator, \Symfony\Component\Serializer\Normalizer\NormalizerInterface $normalizer) : Response
     {
         $user = new User();
 
@@ -184,7 +193,9 @@ class AppController extends AbstractFOSRestController
             return $this->handleView($this->view(["Status" => "Created"], Response::HTTP_CREATED));
         }
 
-        return $this->handleView($this->view($form->getErrors(), Response::HTTP_BAD_REQUEST));
+        $errors = $validator->validate($form);
+
+        return $this->handleView($this->view($errors->get(0), Response::HTTP_BAD_REQUEST));
 
     }
 
