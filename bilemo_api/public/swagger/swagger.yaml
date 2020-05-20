@@ -7,11 +7,16 @@ info:
 servers:
   - url: http://127.0.0.1:8000
 paths:
-  /api/products:
+  /api/products/{page}:
     get:
       tags:
         - Products
       summary: Get All Products
+      parameters:
+        - name: page
+          in: path
+          required: true
+          type: integer
       responses:
         '200':
           description: Returns all products
@@ -32,11 +37,16 @@ paths:
           description: Returns one product
         '404':
           description: Product not found
-  /api/users:
+  /api/users/{page}:
     get:
       tags:
         - User
       summary: Get All Users
+      parameters:
+        - name: page
+          in: path
+          required: true
+          type: integer
       responses:
         '200':
           description: Returns all users

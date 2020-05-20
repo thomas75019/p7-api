@@ -5,12 +5,10 @@ namespace App\Controller;
 use App\Entity\Client;
 use App\Entity\Product;
 use App\Entity\User;
-use App\ErrorHandler\FormErrorHandler;
 use App\Form\UserType;
-use App\Normalizer\NormalizerInterface;
+use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
 use App\Service\CacheHandler;
-use function Clue\StreamFilter\append;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,7 +32,7 @@ class AppController extends AbstractFOSRestController
     /**
      * Get All Products
      *
-     * @Rest\Get("/products", name="get_products")
+     * @Rest\Get("/products/{page}", name="get_products")
      *
      * @SWG\Response(
      *     response=200,
@@ -42,9 +40,11 @@ class AppController extends AbstractFOSRestController
      *     )
      * )
      */
-    public function getProducts(CacheHandler $handler) : Response
+    public function getProducts(CacheHandler $handler, Request $request, ProductRepository $repository) : Response
     {
-        $products = $this->getDoctrine()->getRepository(Product::class)->findAll();
+        $page = $request->get('page');
+
+        $products = iterator_to_array($repository->findAllProducts($page, 10));
 
         if ($products)
         {
@@ -96,7 +96,7 @@ class AppController extends AbstractFOSRestController
     /**
      * Get All Users
      *
-     * @Rest\Get("/users", name="get_all_users")
+     * @Rest\Get("/users/{page}", name="get_all_users")
      *
      * @SWG\Response(
      *    response=200,
@@ -104,11 +104,10 @@ class AppController extends AbstractFOSRestController
      *   )
      * )
      */
-    public function getAllUsers(CacheHandler $handler, UserRepository $repository, Request $request) : Response
+    public function getAllUsers(CacheHandler $handler, Request $request, UserRepository $repository) : Response
     {
-        $users = $this->getDoctrine()->getRepository(User::class)->findAll();
         $page = $request->get('page');
-        $users = iterator_to_array($repository->findAllUsers($page, 10));
+        $users = iterator_to_array($repository->findAllUsers($page, 1));
 
         if ($users)
         {
@@ -143,10 +142,13 @@ class AppController extends AbstractFOSRestController
     {
         $id_user = $request->get('id');
 
-        if (!is_int($id_user))
+        var_dump($id_user);
+
+       /* if (is_int($id_user) == false)
         {
+            var_dump($id_user);
             return $this->handleView($this->view([Response::HTTP_BAD_REQUEST => 'URL is not valid'], Response::HTTP_BAD_REQUEST));
-        }
+        }*/
 
         $user = $this->getDoctrine()->getRepository(User::class)->find($id_user);
 
