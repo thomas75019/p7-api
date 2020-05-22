@@ -52,21 +52,35 @@ paths:
           description: Returns all users
         '404':
           description: No user found
-    post:
-      tags:
-        - User
-      summary: Create an user
-      parameters:
-        - name: id
-          in: header
-          required: true
-          type: string
-      required: true
-      responses:
-        '201':
-          description: Create an user
-        '400':
-          description: Bad request
+  '/api/users':
+      post:
+        tags:
+          - User
+        summary: Create an user
+        consumes:
+          - application/json
+        parameters:
+          - in: body
+            name: user
+            description: The user to create.
+            schema:
+              type: object
+              required:
+                - userName
+              properties:
+                firstname:
+                  type: string
+                lastname:
+                  type: string
+                password:
+                  type: string
+                email:
+                  type: string
+        responses:
+          '201':
+            description: Created
+          '400':
+            description: Bad Request
   '/api/user/{id}':
     get:
       tags:

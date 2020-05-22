@@ -80,11 +80,6 @@ class AppController extends AbstractFOSRestController
         $product_id = $request->get('id');
         $product = $this->getDoctrine()->getRepository(Product::class)->find($product_id);
 
-        if (!is_int($product_id))
-        {
-            return $this->handleView($this->view([Response::HTTP_BAD_REQUEST => 'URL is not valid'], Response::HTTP_BAD_REQUEST));
-        }
-
         if ($product)
         {
             return $this->handleView($this->view($product, Response::HTTP_OK));
