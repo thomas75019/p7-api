@@ -168,7 +168,7 @@ class AppController extends AbstractFOSRestController
      *   )
      * )
      */
-    public function createUser(Request $request, ValidatorInterface $validator, \Symfony\Component\Serializer\Normalizer\NormalizerInterface $normalizer) : Response
+    public function createUser(Request $request, ValidatorInterface $validator) : Response
     {
         $user = new User();
 

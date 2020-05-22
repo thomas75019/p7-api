@@ -125,6 +125,10 @@
       <path value="$PROJECT_DIR$/bilemo_api/vendor/exsyst/swagger" />
       <path value="$PROJECT_DIR$/bilemo_api/vendor/symfony/property-info" />
       <path value="$PROJECT_DIR$/bilemo_api/vendor/twig/twig" />
+      <path value="$PROJECT_DIR$/bilemo_api/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/bilemo_api/vendor/symfony/twig-bundle" />
+      <path value="$PROJECT_DIR$/bilemo_api/vendor/symfony/twig-pack" />
+      <path value="$PROJECT_DIR$/bilemo_api/vendor/symfony/twig-bridge" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.1" />
