@@ -29,7 +29,7 @@ services:
     sensio_framework_extra.view.listener:
         alias: Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener
 
-    App\EventListener\HttpExceptionListener:
+    App\EventListener\ServerErrorListener:
             tags:
                 - { name: kernel.event_listener, event: kernel.exception }
 

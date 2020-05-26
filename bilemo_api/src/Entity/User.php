@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Client;
 use Hateoas\Configuration\Annotation as Hateoas;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * User
@@ -44,6 +45,13 @@ class User
      * @var string
      *
      * @ORM\Column(name="firstname", type="string", length=255, nullable=false)
+     * @Assert\Length(
+     *    min = 1,
+     *    max = 50,
+     *    minMessage = "Your first name must be at least {{ limit }} characters long",
+     *    maxMessage = "Your first name cannot be longer than {{ limit }} characters"
+     * )
+     * @Assert\NotBlank
      */
     private $firstname;
 
@@ -51,13 +59,28 @@ class User
      * @var string
      *
      * @ORM\Column(name="lastname", type="string", length=255, nullable=false)
+     * @Assert\Length(
+     *    min = 1,
+     *    max = 50,
+     *    minMessage = "Your last name must be at least {{ limit }} characters long",
+     *    maxMessage = "Your last name cannot be longer than {{ limit }} characters"
+     * )
+     * @Assert\NotBlank
      */
+
     private $lastname;
 
     /**
      * @var string
      *
      * @ORM\Column(name="password", type="string", length=255, nullable=false)
+     * @Assert\Length(
+     *    min = 6,
+     *    max = 50,
+     *    minMessage = "Your password must be at least {{ limit }} characters long",
+     *    maxMessage = "Your password cannot be longer than {{ limit }} characters"
+     * )
+     * @Assert\NotBlank
      */
     private $password;
 
@@ -65,6 +88,10 @@ class User
      * @var string
      *
      * @ORM\Column(name="email", type="string", length=255, nullable=false)
+     * @Assert\NotBlank
+     * @Assert\Email(
+     *     message = "The email '{{ value }}' is not a valid email."
+     * )
      */
     private $email;
 

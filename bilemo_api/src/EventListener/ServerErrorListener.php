@@ -10,11 +10,12 @@ class ServerErrorListener
     public function onKernelException(ExceptionEvent $event)
     {
 
+        $excption = $event->getException();
         $response = new Response();
 
         $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
         $response->setContent(json_encode([
-            500 => 'Internal Server Error'
+            500 => $excption->getMessage()
         ]));
 
 
